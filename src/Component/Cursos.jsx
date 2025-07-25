@@ -34,11 +34,211 @@ export function Cursos() {
             trabajoSocial: inicializarCarrera(3),
             tecnicoTrabajoSocial: inicializarCarrera(3)
         },
-        bibliografias: {}, // Estado para controlar la expansión de bibliografías
-        clases: {} // Estado para controlar la expansión de clases
+        bibliografias: {},
+        clases: {}
     });
 
-    // Datos completos para asignaturas, bibliografía y clases con enlaces de descarga
+    // Función mejorada para manejar descargas
+    const handleDownload = (e, enlace, nombreArchivo = 'documento') => {
+        e.preventDefault();
+        
+        const extractFileId = (url) => {
+            const match1 = url.match(/[&?]id=([^&]+)/);
+            const match2 = url.match(/\/d\/([^\/]+)/);
+            const match3 = url.match(/\/file\/d\/([^\/]+)/);
+            return (match1 && match1[1]) || (match2 && match2[1]) || (match3 && match3[1]);
+        };
+
+        const fileId = extractFileId(enlace);
+        if (!fileId) {
+            window.open(enlace, '_blank');
+            return;
+        }
+
+        // Versiones de URL de descarga
+        const downloadUrls = [
+            `https://drive.google.com/uc?export=download&id=${fileId}&confirm=t&ts=${Date.now()}`,
+            `https://drive.google.com/uc?id=${fileId}&export=download&confirm=t&random=${Math.random()}`,
+            `https://drive.google.com/uc?export=download&id=${fileId}&force=true`
+        ];
+
+        const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+
+        const tryDownload = (urlIndex = 0) => {
+            if (urlIndex >= downloadUrls.length) {
+                window.open(enlace, '_blank');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = downloadUrls[urlIndex];
+            link.setAttribute('download', nombreArchivo);
+            link.style.display = 'none';
+            document.body.appendChild(link);
+
+            // Estrategia diferente para móviles
+            if (isMobile) {
+                window.location.href = downloadUrls[urlIndex];
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    if (urlIndex < downloadUrls.length - 1) {
+                        setTimeout(() => tryDownload(urlIndex + 1), 1500);
+                    }
+                }, 1000);
+            } else {
+                link.click();
+                document.body.removeChild(link);
+            }
+        };
+
+        tryDownload();
+    };
+
+    // Funciones para manejar la expansión (se mantienen igual)
+    const toggleCarrera = (carrera) => {
+        setExpanded(prev => ({
+            ...prev,
+            carreras: {
+                ...prev.carreras,
+                [carrera]: {
+                    ...prev.carreras[carrera],
+                    expandido: !prev.carreras[carrera].expandido
+                }
+            }
+        }));
+    };
+
+    const toggleAño = (carrera, año) => {
+        setExpanded(prev => ({
+            ...prev,
+            carreras: {
+                ...prev.carreras,
+                [carrera]: {
+                    ...prev.carreras[carrera],
+                    años: {
+                        ...prev.carreras[carrera].años,
+                        [año]: {
+                            ...prev.carreras[carrera].años[año],
+                            expandido: !prev.carreras[carrera].años[año].expandido
+                        }
+                    }
+                }
+            }
+        }));
+    };
+
+    const togglePeriodo = (carrera, año, periodo) => {
+        setExpanded(prev => ({
+            ...prev,
+            carreras: {
+                ...prev.carreras,
+                [carrera]: {
+                    ...prev.carreras[carrera],
+                    años: {
+                        ...prev.carreras[carrera].años,
+                        [año]: {
+                            ...prev.carreras[carrera].años[año],
+                            periodos: {
+                                ...prev.carreras[carrera].años[año].periodos,
+                                [periodo]: {
+                                    ...prev.carreras[carrera].años[año].periodos[periodo],
+                                    expandido: !prev.carreras[carrera].años[año].periodos[periodo].expandido
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }));
+    };
+
+    const toggleAsignatura = (carrera, año, periodo, asignatura) => {
+        setExpanded(prev => ({
+            ...prev,
+            carreras: {
+                ...prev.carreras,
+                [carrera]: {
+                    ...prev.carreras[carrera],
+                    años: {
+                        ...prev.carreras[carrera].años,
+                        [año]: {
+                            ...prev.carreras[carrera].años[año],
+                            periodos: {
+                                ...prev.carreras[carrera].años[año].periodos,
+                                [periodo]: {
+                                    ...prev.carreras[carrera].años[año].periodos[periodo],
+                                    asignaturas: {
+                                        ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas,
+                                        [asignatura]: {
+                                            ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura],
+                                            expandido: !prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura]?.expandido
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }));
+    };
+
+    const toggleBibliografia = (carrera, año, periodo, asignatura, tipo) => {
+        setExpanded(prev => {
+            const key = `${carrera}-${año}-${periodo}-${asignatura}-${tipo}`;
+            return {
+                ...prev,
+                bibliografias: {
+                    ...prev.bibliografias,
+                    [key]: !prev.bibliografias[key]
+                }
+            };
+        });
+    };
+
+    const toggleClases = (carrera, año, periodo, asignatura) => {
+        setExpanded(prev => {
+            const key = `${carrera}-${año}-${periodo}-${asignatura}-clases`;
+            return {
+                ...prev,
+                clases: {
+                    ...prev.clases,
+                    [key]: !prev.clases[key]
+                }
+            };
+        });
+    };
+
+    const collapseAll = () => {
+        const nuevasCarreras = {};
+        Object.keys(expanded.carreras).forEach(carrera => {
+            const nuevosAños = {};
+            Object.keys(expanded.carreras[carrera].años).forEach(año => {
+                const nuevosPeriodos = {};
+                [1, 2].forEach(periodo => {
+                    nuevosPeriodos[periodo] = {
+                        expandido: false,
+                        asignaturas: {}
+                    };
+                });
+                nuevosAños[año] = {
+                    expandido: false,
+                    periodos: nuevosPeriodos
+                };
+            });
+            nuevasCarreras[carrera] = {
+                expandido: false,
+                años: nuevosAños
+            };
+        });
+
+        setExpanded({
+            carreras: nuevasCarreras,
+            bibliografias: {},
+            clases: {}
+        });
+    };
+
     const asignaturasEjemplo = {
         contabilidad: {
             1: {
@@ -1005,154 +1205,7 @@ export function Cursos() {
         }
     };
 
-    // Funciones para manejar la expansión
-    const toggleCarrera = (carrera) => {
-        setExpanded(prev => ({
-            ...prev,
-            carreras: {
-                ...prev.carreras,
-                [carrera]: {
-                    ...prev.carreras[carrera],
-                    expandido: !prev.carreras[carrera].expandido
-                }
-            }
-        }));
-    };
-
-    const toggleAño = (carrera, año) => {
-        setExpanded(prev => ({
-            ...prev,
-            carreras: {
-                ...prev.carreras,
-                [carrera]: {
-                    ...prev.carreras[carrera],
-                    años: {
-                        ...prev.carreras[carrera].años,
-                        [año]: {
-                            ...prev.carreras[carrera].años[año],
-                            expandido: !prev.carreras[carrera].años[año].expandido
-                        }
-                    }
-                }
-            }
-        }));
-    };
-
-    const togglePeriodo = (carrera, año, periodo) => {
-        setExpanded(prev => ({
-            ...prev,
-            carreras: {
-                ...prev.carreras,
-                [carrera]: {
-                    ...prev.carreras[carrera],
-                    años: {
-                        ...prev.carreras[carrera].años,
-                        [año]: {
-                            ...prev.carreras[carrera].años[año],
-                            periodos: {
-                                ...prev.carreras[carrera].años[año].periodos,
-                                [periodo]: {
-                                    ...prev.carreras[carrera].años[año].periodos[periodo],
-                                    expandido: !prev.carreras[carrera].años[año].periodos[periodo].expandido
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }));
-    };
-
-    const toggleAsignatura = (carrera, año, periodo, asignatura) => {
-        setExpanded(prev => ({
-            ...prev,
-            carreras: {
-                ...prev.carreras,
-                [carrera]: {
-                    ...prev.carreras[carrera],
-                    años: {
-                        ...prev.carreras[carrera].años,
-                        [año]: {
-                            ...prev.carreras[carrera].años[año],
-                            periodos: {
-                                ...prev.carreras[carrera].años[año].periodos,
-                                [periodo]: {
-                                    ...prev.carreras[carrera].años[año].periodos[periodo],
-                                    asignaturas: {
-                                        ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas,
-                                        [asignatura]: {
-                                            ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura],
-                                            expandido: !prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura]?.expandido
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }));
-    };
-
-    // Función para manejar la expansión de bibliografías
-    const toggleBibliografia = (carrera, año, periodo, asignatura, tipo) => {
-        setExpanded(prev => {
-            const key = `${carrera}-${año}-${periodo}-${asignatura}-${tipo}`;
-            return {
-                ...prev,
-                bibliografias: {
-                    ...prev.bibliografias,
-                    [key]: !prev.bibliografias[key]
-                }
-            };
-        });
-    };
-
-    // Función para manejar la expansión de clases
-    const toggleClases = (carrera, año, periodo, asignatura) => {
-        setExpanded(prev => {
-            const key = `${carrera}-${año}-${periodo}-${asignatura}-clases`;
-            return {
-                ...prev,
-                clases: {
-                    ...prev.clases,
-                    [key]: !prev.clases[key]
-                }
-            };
-        });
-    };
-
-    const collapseAll = () => {
-        const nuevasCarreras = {};
-        Object.keys(expanded.carreras).forEach(carrera => {
-            const nuevosAños = {};
-            Object.keys(expanded.carreras[carrera].años).forEach(año => {
-                const nuevosPeriodos = {};
-                [1, 2].forEach(periodo => {
-                    nuevosPeriodos[periodo] = {
-                        expandido: false,
-                        asignaturas: {}
-                    };
-                });
-                nuevosAños[año] = {
-                    expandido: false,
-                    periodos: nuevosPeriodos
-                };
-            });
-            nuevasCarreras[carrera] = {
-                expandido: false,
-                años: nuevosAños
-            };
-        });
-
-        setExpanded({
-            carreras: nuevasCarreras,
-            bibliografias: {},
-            clases: {}
-        });
-    };
-
-    // Función para obtener asignaturas de ejemplo o devolver vacío si no hay
+    // Función para obtener asignaturas
     const obtenerAsignaturas = (carrera, año, periodo) => {
         return asignaturasEjemplo[carrera]?.[año]?.[periodo] || {
             "Asignatura de Ejemplo": {
@@ -1173,17 +1226,10 @@ export function Cursos() {
         };
     };
 
-    // Componente para renderizar una carrera
+    // Componente para renderizar una carrera (modificado con nuevo manejo de descargas)
     const renderCarrera = (carrera, nombreCarrera) => {
         const colores = coloresCarreras[carrera];
 
-        const handleDownload = (e, enlace) => {
-            if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-                e.preventDefault();
-                window.location.href = enlace;
-            }
-
-        };
         return (
             <div className={`pl-4 border-l-2 ${colores.border}`} key={carrera}>
                 <div
@@ -1203,7 +1249,6 @@ export function Cursos() {
 
                 {expanded.carreras[carrera].expandido && (
                     <div className={`pl-4 mt-2 ml-4 space-y-3 border-l-2 ${colores.border}`}>
-                        {/* Años */}
                         {Object.keys(expanded.carreras[carrera].años).map(añoStr => {
                             const año = parseInt(añoStr);
                             return (
@@ -1225,7 +1270,6 @@ export function Cursos() {
 
                                     {expanded.carreras[carrera].años[año].expandido && (
                                         <div className={`pl-4 ml-4 space-y-2 border-l-2 ${colores.border}`}>
-                                            {/* Periodos */}
                                             {[1, 2].map(periodo => (
                                                 <div key={`${carrera}-periodo-${año}-${periodo}`}>
                                                     <div
@@ -1245,7 +1289,6 @@ export function Cursos() {
 
                                                     {expanded.carreras[carrera].años[año].periodos[periodo].expandido && (
                                                         <div className={`pl-4 ml-4 space-y-3 border-l-2 ${colores.border}`}>
-                                                            {/* Asignaturas */}
                                                             {Object.entries(obtenerAsignaturas(carrera, año, periodo)).map(([nombreAsignatura, datos]) => (
                                                                 <div key={`${carrera}-asignatura-${año}-${periodo}-${nombreAsignatura}`}>
                                                                     <div
@@ -1285,10 +1328,8 @@ export function Cursos() {
                                                                                             <li key={`basica-${index}`} className="text-xs text-gray-600">
                                                                                                 <a
                                                                                                     href={libro.enlace}
-                                                                                                    onClick={(e) => handleDownload(e, libro.enlace)}
-                                                                                                    target="_blank"
-                                                                                                    rel="noopener noreferrer"
-                                                                                                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                                                                                                    onClick={(e) => handleDownload(e, libro.enlace, libro.nombre)}
+                                                                                                    className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
                                                                                                 >
                                                                                                     {libro.nombre}
                                                                                                 </a>
@@ -1318,10 +1359,8 @@ export function Cursos() {
                                                                                             <li key={`complementaria-${index}`} className="text-xs text-gray-600">
                                                                                                 <a
                                                                                                     href={libro.enlace}
-                                                                                                    onClick={(e) => handleDownload(e, libro.enlace)}
-                                                                                                    target="_blank"
-                                                                                                    rel="noopener noreferrer"
-                                                                                                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                                                                                                    onClick={(e) => handleDownload(e, libro.enlace, libro.nombre)}
+                                                                                                    className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
                                                                                                 >
                                                                                                     {libro.nombre}
                                                                                                 </a>
@@ -1351,10 +1390,8 @@ export function Cursos() {
                                                                                             <li key={`clase-${index}`} className="text-xs text-gray-600">
                                                                                                 <a
                                                                                                     href={clase.enlace}
-                                                                                                    onClick={(e) => handleDownload(e, clase.enlace)}
-                                                                                                    target="_blank"
-                                                                                                    rel="noopener noreferrer"
-                                                                                                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                                                                                                    onClick={(e) => handleDownload(e, clase.enlace, clase.nombre)}
+                                                                                                    className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
                                                                                                 >
                                                                                                     {clase.nombre}
                                                                                                 </a>
