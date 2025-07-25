@@ -1,4 +1,4 @@
-import imgCum from '../assets/CUM.png';
+import imgCum from '../assets/Cum.png';
 import { useNavigate } from 'react-router-dom';
 
 export function Header() {

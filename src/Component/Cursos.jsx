@@ -611,7 +611,7 @@ export function Cursos() {
                             }
                         ]
                     },
-                    "Defensa Nacional":{
+                    "Defensa Nacional": {
                         expandido: false,
                         bibliografiaBasica: [
                             {
@@ -627,7 +627,7 @@ export function Cursos() {
                                 enlace: "https://drive.google.com/uc?export=download&id=1FJXZg8lEb34D-qNKaI8DP_dNqM6CmT9k"
                             },
                         ],
-                        bibliografiaComplementaria:[
+                        bibliografiaComplementaria: [
                             {
                                 nombre: "BRIGADAS DE PRODUCCIÓN Y DEFENSA",
                                 enlace: "https://drive.google.com/uc?export=download&id=1evlvUx80QFP0sn48FbvJvlot0NfCimBq"
@@ -653,7 +653,7 @@ export function Cursos() {
                                 enlace: "https://drive.google.com/uc?export=download&id=1Fcb7qvKy9_1Nff3kGcjeNkqeL8eglnW0"
                             },
                         ],
-                        clases:[
+                        clases: [
                             {
                                 nombre: "Clase 1",
                                 enlace: "https://drive.google.com/uc?export=download&id=16-Tih7b10IHjkdQ5nAnwYo-n_t9kK2uh"
@@ -708,7 +708,7 @@ export function Cursos() {
                             }
                         ]
                     },
-                    "Seguridad Nacional":{
+                    "Seguridad Nacional": {
                         expandido: false,
                         bibliografiaBasica: [
                             {
@@ -732,7 +732,7 @@ export function Cursos() {
                                 enlace: "https://drive.google.com/uc?export=download&id=1vK5wlnNcNu2wdHzVo86EE2ZGhTfE7I5x"
                             }
                         ],
-                        bibliografiaComplementaria:[
+                        bibliografiaComplementaria: [
                             {
                                 nombre: "CÓMO PROTEGERSE Y REDUCIR EL RIESGO ANTE LA PANDEMIA DEL CORNAVIRUS",
                                 enlace: "https://drive.google.com/uc?export=download&id=1Z-4XKb2lIUMLyd7fjRqxFckkDVfz6oqa"
@@ -788,9 +788,9 @@ export function Cursos() {
                             {
                                 nombre: "FOTO titulos-ley-helms-burton-580x789",
                                 enlace: "https://drive.google.com/uc?export=download&id=1sm-__PEScTS4-LgXuKqWSfca2Tb6A5N8"
-                            }            
+                            }
                         ],
-                        clases:[
+                        clases: [
                             {
                                 nombre: "Clase 1",
                                 enlace: "https://drive.google.com/uc?export=download&id=1tsXXlMmMWtsgVNNAsedEzkeVBIQbNuoz"
@@ -833,7 +833,7 @@ export function Cursos() {
                             }
                         ]
                     },
-                    "Fundamentos de la contrucción del socialismo en cuba I":{
+                    "Fundamentos de la contrucción del socialismo en cuba I": {
                         expandido: false,
                         bibliografiaBasica: [
                             {
@@ -849,7 +849,7 @@ export function Cursos() {
                                 enlace: "https://drive.google.com/uc?export=download&id=1p7TUTomo2XsrcBtjlMcMZSFa-fHjtSMS"
                             }
                         ],
-                        bibliografiaComplementaria:[
+                        bibliografiaComplementaria: [
                             {
                                 nombre: "¿Cuentapropismo o emprendimiento Una aproximación desde el contexto cubano 2073-6061-cofin-13-02-e03-1-1",
                                 enlace: "https://drive.google.com/uc?export=download&id=1DiyJkjjDakj654FHCgn-U3lBFSdT27D7"
@@ -869,9 +869,9 @@ export function Cursos() {
                             {
                                 nombre: "LAS INTERNACIONALES",
                                 enlace: "https://drive.google.com/uc?export=download&id=1mAT6n78Tfa0DAm8xk309DJogg168Qy43"
-                            }       
+                            }
                         ],
-                        clases:[
+                        clases: [
                             {
                                 nombre: "Clase 1",
                                 enlace: "https://drive.google.com/uc?export=download&id=1UUOo5LJRSa1jzTikfMHRM8ZoTzRbeomn"
