@@ -39,9 +39,9 @@ export function Cursos() {
     });
 
     // Función mejorada para manejar descargas
-    const handleDownload = async (e, enlace, nombreArchivo = 'documento') => {
+    const handleDownload = (e, enlace, nombreArchivo = 'documento') => {
         e.preventDefault();
-
+        
         const extractFileId = (url) => {
             const match1 = url.match(/[&?]id=([^&]+)/);
             const match2 = url.match(/\/d\/([^\/]+)/);
@@ -55,41 +55,43 @@ export function Cursos() {
             return;
         }
 
-        // Nueva estrategia para todos los dispositivos
-        const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+        // Versiones de URL de descarga
+        const downloadUrls = [
+            `https://drive.google.com/uc?export=download&id=${fileId}&confirm=t&ts=${Date.now()}`,
+            `https://drive.google.com/uc?id=${fileId}&export=download&confirm=t&random=${Math.random()}`,
+            `https://drive.google.com/uc?export=download&id=${fileId}&force=true`
+        ];
 
-        if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-            // Para móviles: abrir en nueva pestaña y forzar descarga
-            const newWindow = window.open('', '_blank');
+        const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
 
-            // Primero intentamos con el método tradicional
-            try {
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.setAttribute('download', nombreArchivo);
-                link.setAttribute('target', '_blank');
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+        const tryDownload = (urlIndex = 0) => {
+            if (urlIndex >= downloadUrls.length) {
+                window.open(enlace, '_blank');
+                return;
+            }
 
-                // Si falla, abrimos directamente en nueva pestaña
+            const link = document.createElement('a');
+            link.href = downloadUrls[urlIndex];
+            link.setAttribute('download', nombreArchivo);
+            link.style.display = 'none';
+            document.body.appendChild(link);
+
+            // Estrategia diferente para móviles
+            if (isMobile) {
+                window.location.href = downloadUrls[urlIndex];
                 setTimeout(() => {
-                    if (!newWindow || newWindow.closed || newWindow.document.readyState === 'complete') {
-                        window.open(downloadUrl, '_blank');
+                    document.body.removeChild(link);
+                    if (urlIndex < downloadUrls.length - 1) {
+                        setTimeout(() => tryDownload(urlIndex + 1), 1500);
                     }
                 }, 1000);
-            } catch (error) {
-                window.open(downloadUrl, '_blank');
+            } else {
+                link.click();
+                document.body.removeChild(link);
             }
-        } else {
-            // Para desktop: método tradicional
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.setAttribute('download', nombreArchivo);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        };
+
+        tryDownload();
     };
 
     // Funciones para manejar la expansión (se mantienen igual)
