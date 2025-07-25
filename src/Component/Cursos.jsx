@@ -1177,6 +1177,13 @@ export function Cursos() {
     const renderCarrera = (carrera, nombreCarrera) => {
         const colores = coloresCarreras[carrera];
 
+        const handleDownload = (e, enlace) => {
+            if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+                e.preventDefault();
+                window.location.href = enlace;
+            }
+
+        };
         return (
             <div className={`pl-4 border-l-2 ${colores.border}`} key={carrera}>
                 <div
@@ -1278,10 +1285,10 @@ export function Cursos() {
                                                                                             <li key={`basica-${index}`} className="text-xs text-gray-600">
                                                                                                 <a
                                                                                                     href={libro.enlace}
+                                                                                                    onClick={(e) => handleDownload(e, libro.enlace)}
                                                                                                     target="_blank"
                                                                                                     rel="noopener noreferrer"
                                                                                                     className="text-blue-600 hover:text-blue-800 hover:underline"
-                                                                                                    onClick={(e) => e.stopPropagation()}
                                                                                                 >
                                                                                                     {libro.nombre}
                                                                                                 </a>
@@ -1311,10 +1318,10 @@ export function Cursos() {
                                                                                             <li key={`complementaria-${index}`} className="text-xs text-gray-600">
                                                                                                 <a
                                                                                                     href={libro.enlace}
+                                                                                                    onClick={(e) => handleDownload(e, libro.enlace)}
                                                                                                     target="_blank"
                                                                                                     rel="noopener noreferrer"
                                                                                                     className="text-blue-600 hover:text-blue-800 hover:underline"
-                                                                                                    onClick={(e) => e.stopPropagation()}
                                                                                                 >
                                                                                                     {libro.nombre}
                                                                                                 </a>
@@ -1344,10 +1351,10 @@ export function Cursos() {
                                                                                             <li key={`clase-${index}`} className="text-xs text-gray-600">
                                                                                                 <a
                                                                                                     href={clase.enlace}
+                                                                                                    onClick={(e) => handleDownload(e, clase.enlace)}
                                                                                                     target="_blank"
                                                                                                     rel="noopener noreferrer"
                                                                                                     className="text-blue-600 hover:text-blue-800 hover:underline"
-                                                                                                    onClick={(e) => e.stopPropagation()}
                                                                                                 >
                                                                                                     {clase.nombre}
                                                                                                 </a>
