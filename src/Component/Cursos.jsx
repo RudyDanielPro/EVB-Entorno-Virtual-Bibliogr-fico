@@ -1,27 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 
-export function Cursos() {
-    // Función para inicializar la estructura de una carrera
-    const inicializarCarrera = (años) => {
-        const estructura = {
-            expandido: false,
-            años: {}
-        };
-
-        for (let año = 1; año <= años; año++) {
-            estructura.años[año] = {
-                expandido: false,
-                periodos: {
-                    1: { expandido: false, asignaturas: {} },
-                    2: { expandido: false, asignaturas: {} }
-                }
-            };
-        }
-
-        return estructura;
+// Función para inicializar la estructura de una carrera (fuera del componente)
+function inicializarCarrera(años) {
+    const estructura = {
+        expandido: false,
+        años: {}
     };
 
-    // Estados para controlar expansión
+    for (let año = 1; año <= años; año++) {
+        estructura.años[año] = {
+            expandido: false,  // Inicialmente no expandido
+            periodos: {
+                1: { expandido: false, asignaturas: {} },
+                2: { expandido: false, asignaturas: {} }
+            }
+        };
+    }
+
+    return estructura;
+}
+
+export function Cursos() {
+    const location = useLocation();
+    const [carreraSeleccionada, setCarreraSeleccionada] = useState(null);
+    const [terminoBusqueda, setTerminoBusqueda] = useState('');
+    const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
     const [expanded, setExpanded] = useState({
         carreras: {
             contabilidad: inicializarCarrera(5),
@@ -34,67 +38,204 @@ export function Cursos() {
             trabajoSocial: inicializarCarrera(3),
             tecnicoTrabajoSocial: inicializarCarrera(3)
         },
+        seccionesEspeciales: {
+            trabajoMetodologico: {
+                expandido: false,
+                asignaturas: {
+                    "Metodología de la Investigación": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            { nombre: "Metodología de la Investigación - Hernández", enlace: "#" },
+                            { nombre: "Cómo hacer investigación - Sampieri", enlace: "#" }
+                        ],
+                        bibliografiaComplementaria: [
+                            { nombre: "Técnicas de investigación - Tamayo", enlace: "#" },
+                            { nombre: "El proceso de investigación - Sabino", enlace: "#" }
+                        ],
+                        clases: [
+                            { nombre: "Clase 1: Introducción a la investigación", enlace: "#" },
+                            { nombre: "Clase 2: Diseños metodológicos", enlace: "#" }
+                        ]
+                    }
+                }
+            },
+            idiomas: {
+                expandido: false,
+                asignaturas: {
+                    "Inglés Básico": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            { nombre: "Essential Grammar in Use - Murphy", enlace: "#" },
+                            { nombre: "English for Everyone - DK", enlace: "#" }
+                        ],
+                        bibliografiaComplementaria: [
+                            { nombre: "Practical English Usage - Swan", enlace: "#" },
+                            { nombre: "Oxford Picture Dictionary", enlace: "#" }
+                        ],
+                        clases: [
+                            { nombre: "Clase 1: Presentaciones", enlace: "#" },
+                            { nombre: "Clase 2: Verbos básicos", enlace: "#" }
+                        ]
+                    },
+                    "Francés Elemental": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            { nombre: "Le Nouveau Taxi - Hachette", enlace: "#" },
+                            { nombre: "Grammaire Progressive - CLE", enlace: "#" }
+                        ],
+                        bibliografiaComplementaria: [
+                            { nombre: "Bescherelle - La conjugaison", enlace: "#" },
+                            { nombre: "Dictionnaire Larousse", enlace: "#" }
+                        ],
+                        clases: [
+                            { nombre: "Clase 1: Saludos", enlace: "#" },
+                            { nombre: "Clase 2: Artículos", enlace: "#" }
+                        ]
+                    }
+                }
+            },
+            eventos: {
+                expandido: false,
+                asignaturas: {
+                    "Seminarios Científicos": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            { nombre: "Cómo presentar trabajos científicos - Booth", enlace: "#" },
+                            { nombre: "El arte de hablar en público - Carnegie", enlace: "#" }
+                        ],
+                        bibliografiaComplementaria: [
+                            { nombre: "Comunicación científica - Day", enlace: "#" },
+                            { nombre: "Redacción de abstracts - Swales", enlace: "#" }
+                        ],
+                        clases: [
+                            { nombre: "Clase 1: Estructura de ponencias", enlace: "#" },
+                            { nombre: "Clase 2: Presentaciones efectivas", enlace: "#" }
+                        ]
+                    },
+                    "Talleres Prácticos": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            { nombre: "Aprendizaje experiencial - Kolb", enlace: "#" },
+                            { nombre: "Dinámicas grupales - Rogers", enlace: "#" }
+                        ],
+                        bibliografiaComplementaria: [
+                            { nombre: "Juegos para talleres - Brandes", enlace: "#" },
+                            { nombre: "Facilitación gráfica - Sibbet", enlace: "#" }
+                        ],
+                        clases: [
+                            { nombre: "Clase 1: Diseño de talleres", enlace: "#" },
+                            { nombre: "Clase 2: Técnicas participativas", enlace: "#" }
+                        ]
+                    }
+                }
+            }
+        },
         bibliografias: {},
         clases: {}
     });
 
-    // Función mejorada para manejar descargas
-    const handleDownload = (e, enlace, nombreArchivo = 'documento') => {
-        e.preventDefault();
-        
-        const extractFileId = (url) => {
-            const match1 = url.match(/[&?]id=([^&]+)/);
-            const match2 = url.match(/\/d\/([^\/]+)/);
-            const match3 = url.match(/\/file\/d\/([^\/]+)/);
-            return (match1 && match1[1]) || (match2 && match2[1]) || (match3 && match3[1]);
-        };
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const carreraParam = queryParams.get('carrera');
 
-        const fileId = extractFileId(enlace);
-        if (!fileId) {
-            window.open(enlace, '_blank');
+        if (carreraParam) {
+            // Verificar si es una carrera regular
+            if (expanded.carreras[carreraParam]) {
+                setCarreraSeleccionada(carreraParam);
+                setExpanded(prev => ({
+                    ...prev,
+                    carreras: {
+                        ...prev.carreras,
+                        [carreraParam]: {
+                            ...prev.carreras[carreraParam],
+                            expandido: true
+                        }
+                    }
+                }));
+            }
+            // Verificar si es una sección especial
+            else if (expanded.seccionesEspeciales[carreraParam]) {
+                setCarreraSeleccionada(carreraParam);
+                setExpanded(prev => ({
+                    ...prev,
+                    seccionesEspeciales: {
+                        ...prev.seccionesEspeciales,
+                        [carreraParam]: {
+                            ...prev.seccionesEspeciales[carreraParam],
+                            expandido: true
+                        }
+                    }
+                }));
+            }
+
+            setTimeout(() => {
+                const cursosSection = document.getElementById('cursos-section');
+                if (cursosSection) {
+                    cursosSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+    }, [location.search]);
+
+    // Función para buscar asignaturas
+    const buscarAsignaturas = (termino) => {
+        if (!termino.trim()) {
+            setResultadosBusqueda([]);
             return;
         }
 
-        // Versiones de URL de descarga
-        const downloadUrls = [
-            `https://drive.google.com/uc?export=download&id=${fileId}&confirm=t&ts=${Date.now()}`,
-            `https://drive.google.com/uc?id=${fileId}&export=download&confirm=t&random=${Math.random()}`,
-            `https://drive.google.com/uc?export=download&id=${fileId}&force=true`
-        ];
+        const resultados = [];
+        const terminoLower = termino.toLowerCase();
 
-        const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+        // Buscar en carreras regulares
+        Object.keys(asignaturasEjemplo).forEach(carrera => {
+            Object.keys(asignaturasEjemplo[carrera]).forEach(año => {
+                Object.keys(asignaturasEjemplo[carrera][año]).forEach(periodo => {
+                    Object.keys(asignaturasEjemplo[carrera][año][periodo]).forEach(asignatura => {
+                        if (asignatura.toLowerCase().includes(terminoLower)) {
+                            resultados.push({
+                                carrera,
+                                año: parseInt(año),
+                                periodo: parseInt(periodo),
+                                nombreAsignatura: asignatura,
+                                datos: asignaturasEjemplo[carrera][año][periodo][asignatura],
+                                tipo: 'carrera'
+                            });
+                        }
+                    });
+                });
+            });
+        });
 
-        const tryDownload = (urlIndex = 0) => {
-            if (urlIndex >= downloadUrls.length) {
-                window.open(enlace, '_blank');
-                return;
-            }
+        // Buscar en secciones especiales
+        Object.keys(expanded.seccionesEspeciales).forEach(seccion => {
+            Object.keys(expanded.seccionesEspeciales[seccion].asignaturas).forEach(asignatura => {
+                if (asignatura.toLowerCase().includes(terminoLower)) {
+                    resultados.push({
+                        carrera: seccion,
+                        nombreAsignatura: asignatura,
+                        datos: expanded.seccionesEspeciales[seccion].asignaturas[asignatura],
+                        tipo: 'seccionEspecial'
+                    });
+                }
+            });
+        });
 
-            const link = document.createElement('a');
-            link.href = downloadUrls[urlIndex];
-            link.setAttribute('download', nombreArchivo);
-            link.style.display = 'none';
-            document.body.appendChild(link);
-
-            // Estrategia diferente para móviles
-            if (isMobile) {
-                window.location.href = downloadUrls[urlIndex];
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    if (urlIndex < downloadUrls.length - 1) {
-                        setTimeout(() => tryDownload(urlIndex + 1), 1500);
-                    }
-                }, 1000);
-            } else {
-                link.click();
-                document.body.removeChild(link);
-            }
-        };
-
-        tryDownload();
+        setResultadosBusqueda(resultados);
     };
 
-    // Funciones para manejar la expansión (se mantienen igual)
+    useEffect(() => {
+        buscarAsignaturas(terminoBusqueda);
+    }, [terminoBusqueda]);
+
+    const handleDownload = (e, enlace, nombreArchivo = 'documento') => {
+        e.preventDefault();
+        // Simulación de descarga
+        console.log(`Descargando ${nombreArchivo} desde ${enlace}`);
+        // En una implementación real, aquí iría la lógica para descargar el archivo
+    };
+
+    // Funciones para manejar la expansión
     const toggleCarrera = (carrera) => {
         setExpanded(prev => ({
             ...prev,
@@ -106,6 +247,21 @@ export function Cursos() {
                 }
             }
         }));
+        setCarreraSeleccionada(!expanded.carreras[carrera].expandido ? carrera : null);
+    };
+
+    const toggleSeccionEspecial = (seccion) => {
+        setExpanded(prev => ({
+            ...prev,
+            seccionesEspeciales: {
+                ...prev.seccionesEspeciales,
+                [seccion]: {
+                    ...prev.seccionesEspeciales[seccion],
+                    expandido: !prev.seccionesEspeciales[seccion].expandido
+                }
+            }
+        }));
+        setCarreraSeleccionada(!expanded.seccionesEspeciales[seccion].expandido ? seccion : null);
     };
 
     const toggleAño = (carrera, año) => {
@@ -152,26 +308,45 @@ export function Cursos() {
         }));
     };
 
-    const toggleAsignatura = (carrera, año, periodo, asignatura) => {
-        setExpanded(prev => ({
-            ...prev,
-            carreras: {
-                ...prev.carreras,
-                [carrera]: {
-                    ...prev.carreras[carrera],
-                    años: {
-                        ...prev.carreras[carrera].años,
-                        [año]: {
-                            ...prev.carreras[carrera].años[año],
-                            periodos: {
-                                ...prev.carreras[carrera].años[año].periodos,
-                                [periodo]: {
-                                    ...prev.carreras[carrera].años[año].periodos[periodo],
-                                    asignaturas: {
-                                        ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas,
-                                        [asignatura]: {
-                                            ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura],
-                                            expandido: !prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura]?.expandido
+    const toggleAsignatura = (carrera, año, periodo, asignatura, tipo = 'carrera') => {
+        if (tipo === 'seccionEspecial') {
+            setExpanded(prev => ({
+                ...prev,
+                seccionesEspeciales: {
+                    ...prev.seccionesEspeciales,
+                    [carrera]: {
+                        ...prev.seccionesEspeciales[carrera],
+                        asignaturas: {
+                            ...prev.seccionesEspeciales[carrera].asignaturas,
+                            [asignatura]: {
+                                ...prev.seccionesEspeciales[carrera].asignaturas[asignatura],
+                                expandido: !prev.seccionesEspeciales[carrera].asignaturas[asignatura]?.expandido
+                            }
+                        }
+                    }
+                }
+            }));
+        } else {
+            setExpanded(prev => ({
+                ...prev,
+                carreras: {
+                    ...prev.carreras,
+                    [carrera]: {
+                        ...prev.carreras[carrera],
+                        años: {
+                            ...prev.carreras[carrera].años,
+                            [año]: {
+                                ...prev.carreras[carrera].años[año],
+                                periodos: {
+                                    ...prev.carreras[carrera].años[año].periodos,
+                                    [periodo]: {
+                                        ...prev.carreras[carrera].años[año].periodos[periodo],
+                                        asignaturas: {
+                                            ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas,
+                                            [asignatura]: {
+                                                ...prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura],
+                                                expandido: !prev.carreras[carrera].años[año].periodos[periodo].asignaturas[asignatura]?.expandido
+                                            }
                                         }
                                     }
                                 }
@@ -179,34 +354,36 @@ export function Cursos() {
                         }
                     }
                 }
+            }));
+        }
+    };
+
+    const toggleBibliografia = (carrera, año, periodo, asignatura, tipo, seccionEspecial = false) => {
+        const key = seccionEspecial
+            ? `${carrera}-${asignatura}-${tipo}`
+            : `${carrera}-${año}-${periodo}-${asignatura}-${tipo}`;
+
+        setExpanded(prev => ({
+            ...prev,
+            bibliografias: {
+                ...prev.bibliografias,
+                [key]: !prev.bibliografias[key]
             }
         }));
     };
 
-    const toggleBibliografia = (carrera, año, periodo, asignatura, tipo) => {
-        setExpanded(prev => {
-            const key = `${carrera}-${año}-${periodo}-${asignatura}-${tipo}`;
-            return {
-                ...prev,
-                bibliografias: {
-                    ...prev.bibliografias,
-                    [key]: !prev.bibliografias[key]
-                }
-            };
-        });
-    };
+    const toggleClases = (carrera, año, periodo, asignatura, seccionEspecial = false) => {
+        const key = seccionEspecial
+            ? `${carrera}-${asignatura}-clases`
+            : `${carrera}-${año}-${periodo}-${asignatura}-clases`;
 
-    const toggleClases = (carrera, año, periodo, asignatura) => {
-        setExpanded(prev => {
-            const key = `${carrera}-${año}-${periodo}-${asignatura}-clases`;
-            return {
-                ...prev,
-                clases: {
-                    ...prev.clases,
-                    [key]: !prev.clases[key]
-                }
-            };
-        });
+        setExpanded(prev => ({
+            ...prev,
+            clases: {
+                ...prev.clases,
+                [key]: !prev.clases[key]
+            }
+        }));
     };
 
     const collapseAll = () => {
@@ -232,13 +409,79 @@ export function Cursos() {
             };
         });
 
+        const nuevasSeccionesEspeciales = {};
+        Object.keys(expanded.seccionesEspeciales).forEach(seccion => {
+            nuevasSeccionesEspeciales[seccion] = {
+                expandido: false,
+                asignaturas: Object.keys(expanded.seccionesEspeciales[seccion].asignaturas).reduce((acc, asignatura) => {
+                    acc[asignatura] = { ...expanded.seccionesEspeciales[seccion].asignaturas[asignatura], expandido: false };
+                    return acc;
+                }, {})
+            };
+        });
+
         setExpanded({
             carreras: nuevasCarreras,
+            seccionesEspeciales: nuevasSeccionesEspeciales,
             bibliografias: {},
             clases: {}
         });
+        setCarreraSeleccionada(null);
     };
 
+    // Función para verificar si todo está colapsado
+    const todoColapsado = () => {
+        const carrerasColapsadas = Object.values(expanded.carreras).every(
+            carrera => !carrera.expandido
+        );
+
+        const seccionesColapsadas = Object.values(expanded.seccionesEspeciales).every(
+            seccion => !seccion.expandido
+        );
+
+        return carrerasColapsadas && seccionesColapsadas;
+    };
+
+    // Función para alternar entre colapsar/expandir todo
+    const toggleExpandCollapseAll = () => {
+        if (todoColapsado()) {
+            // Solo expandir carreras y secciones, no años ni asignaturas
+            const nuevasCarreras = {};
+            Object.keys(expanded.carreras).forEach(carrera => {
+                nuevasCarreras[carrera] = {
+                    ...expanded.carreras[carrera],
+                    expandido: true,
+                    años: Object.keys(expanded.carreras[carrera].años).reduce((acc, año) => {
+                        acc[año] = { ...expanded.carreras[carrera].años[año], expandido: false };
+                        return acc;
+                    }, {})
+                };
+            });
+
+            const nuevasSeccionesEspeciales = {};
+            Object.keys(expanded.seccionesEspeciales).forEach(seccion => {
+                nuevasSeccionesEspeciales[seccion] = {
+                    ...expanded.seccionesEspeciales[seccion],
+                    expandido: true,
+                    asignaturas: Object.keys(expanded.seccionesEspeciales[seccion].asignaturas).reduce((acc, asignatura) => {
+                        acc[asignatura] = { ...expanded.seccionesEspeciales[seccion].asignaturas[asignatura], expandido: false };
+                        return acc;
+                    }, {})
+                };
+            });
+
+            setExpanded({
+                carreras: nuevasCarreras,
+                seccionesEspeciales: nuevasSeccionesEspeciales,
+                bibliografias: {},
+                clases: {}
+            });
+        } else {
+            collapseAll();
+        }
+    };
+
+    // Datos de ejemplo para las asignaturas (igual que en tu código original)
     const asignaturasEjemplo = {
         contabilidad: {
             1: {
@@ -1111,7 +1354,7 @@ export function Cursos() {
         }
     };
 
-    // Colores para cada carrera
+    // Colores para cada carrera y sección especial
     const coloresCarreras = {
         contabilidad: {
             border: 'border-blue-200',
@@ -1202,6 +1445,30 @@ export function Cursos() {
             asignatura: 'text-pink-200',
             bibliografia: 'text-pink-100',
             clase: 'text-pink-50'
+        },
+        trabajoMetodologico: {
+            border: 'border-teal-200',
+            hover: 'hover:bg-teal-50',
+            icon: 'text-teal-500',
+            asignatura: 'text-teal-300',
+            bibliografia: 'text-teal-100',
+            clase: 'text-teal-50'
+        },
+        idiomas: {
+            border: 'border-amber-200',
+            hover: 'hover:bg-amber-50',
+            icon: 'text-amber-500',
+            asignatura: 'text-amber-300',
+            bibliografia: 'text-amber-100',
+            clase: 'text-amber-50'
+        },
+        eventos: {
+            border: 'border-rose-200',
+            hover: 'hover:bg-rose-50',
+            icon: 'text-rose-500',
+            asignatura: 'text-rose-300',
+            bibliografia: 'text-rose-100',
+            clase: 'text-rose-50'
         }
     };
 
@@ -1211,29 +1478,48 @@ export function Cursos() {
             "Asignatura de Ejemplo": {
                 expandido: false,
                 bibliografiaBasica: [
-                    { nombre: "Libro básico 1", enlace: "https://drive.google.com/uc?export=download&id=ID_EJEMPLO_1" },
-                    { nombre: "Libro básico 2", enlace: "https://drive.google.com/uc?export=download&id=ID_EJEMPLO_2" }
+                    { nombre: "Libro básico 1", enlace: "#" },
+                    { nombre: "Libro básico 2", enlace: "#" }
                 ],
                 bibliografiaComplementaria: [
-                    { nombre: "Libro complementario 1", enlace: "https://drive.google.com/uc?export=download&id=ID_EJEMPLO_3" },
-                    { nombre: "Libro complementario 2", enlace: "https://drive.google.com/uc?export=download&id=ID_EJEMPLO_4" }
+                    { nombre: "Libro complementario 1", enlace: "#" },
+                    { nombre: "Libro complementario 2", enlace: "#" }
                 ],
                 clases: [
-                    { nombre: "Clase de Ejemplo 1", enlace: "https://drive.google.com/uc?export=download&id=ID_CLASE_EJEMPLO_1" },
-                    { nombre: "Clase de Ejemplo 2", enlace: "https://drive.google.com/uc?export=download&id=ID_CLASE_EJEMPLO_2" }
+                    { nombre: "Clase de Ejemplo 1", enlace: "#" },
+                    { nombre: "Clase de Ejemplo 2", enlace: "#" }
                 ]
             }
         };
     };
 
-    // Componente para renderizar una carrera (modificado con nuevo manejo de descargas)
+    // Función auxiliar para obtener el nombre de la carrera o sección especial
+    const obtenerNombreSeccion = (idSeccion) => {
+        const nombres = {
+            contabilidad: 'Licenciatura en Contabilidad y Finanzas',
+            culturaFisica: 'Licenciatura en Cultura Física',
+            educacionPrimaria5: 'Licenciatura en Educación Primaria (5 años)',
+            educacionPrimaria3: 'Licenciatura en Educación Primaria (3 años)',
+            educacionPreescolar5: 'Licenciatura en Educación Preescolar (5 años)',
+            educacionPreescolar3: 'Licenciatura en Educación Preescolar (3 años)',
+            agronoma: 'Ingeniería Agrónoma',
+            trabajoSocial: 'Licenciatura en Trabajo Social',
+            tecnicoTrabajoSocial: 'Técnico Superior en Trabajo Social',
+            trabajoMetodologico: 'Trabajo Metodológico',
+            idiomas: 'Idiomas',
+            eventos: 'Eventos'
+        };
+        return nombres[idSeccion] || idSeccion;
+    };
+
+    // Componente para renderizar una carrera
     const renderCarrera = (carrera, nombreCarrera) => {
         const colores = coloresCarreras[carrera];
 
         return (
             <div className={`pl-4 border-l-2 ${colores.border}`} key={carrera}>
                 <div
-                    className={`flex items-center justify-between px-3 py-3 transition-colors rounded-lg cursor-pointer ${colores.hover}`}
+                    className={`flex items-center justify-between px-3 py-3 transition-colors rounded-lg cursor-pointer ${colores.hover} ${carreraSeleccionada === carrera ? 'bg-gray-100' : ''}`}
                     onClick={() => toggleCarrera(carrera)}
                 >
                     <span className="text-lg font-semibold text-gray-800">{nombreCarrera}</span>
@@ -1419,38 +1705,284 @@ export function Cursos() {
         );
     };
 
+    // Componente para renderizar una sección especial (sin años)
+    const renderSeccionEspecial = (seccion, nombreSeccion) => {
+        const colores = coloresCarreras[seccion];
+
+        return (
+            <div className={`pl-4 border-l-2 ${colores.border}`} key={seccion}>
+                <div
+                    className={`flex items-center justify-between px-3 py-3 transition-colors rounded-lg cursor-pointer ${colores.hover} ${carreraSeleccionada === seccion ? 'bg-gray-100' : ''}`}
+                    onClick={() => toggleSeccionEspecial(seccion)}
+                >
+                    <span className="text-lg font-semibold text-gray-800">{nombreSeccion}</span>
+                    <svg
+                        className={`w-6 h-6 ${colores.icon} transform transition-transform ${expanded.seccionesEspeciales[seccion].expandido ? 'rotate-0' : '-rotate-90'}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+
+                {expanded.seccionesEspeciales[seccion].expandido && (
+                    <div className={`pl-4 mt-2 ml-4 space-y-3 border-l-2 ${colores.border}`}>
+                        {Object.entries(expanded.seccionesEspeciales[seccion].asignaturas).map(([nombreAsignatura, datos]) => (
+                            <div key={`${seccion}-asignatura-${nombreAsignatura}`}>
+                                <div
+                                    className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer ${colores.hover}`}
+                                    onClick={() => toggleAsignatura(seccion, null, null, nombreAsignatura, 'seccionEspecial')}
+                                >
+                                    <span className="text-sm font-medium text-gray-600">{nombreAsignatura}</span>
+                                    <svg
+                                        className={`w-4 h-4 ${colores.asignatura} transform transition-transform ${expanded.seccionesEspeciales[seccion].asignaturas[nombreAsignatura]?.expandido ? 'rotate-0' : '-rotate-90'}`}
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+
+                                {expanded.seccionesEspeciales[seccion].asignaturas[nombreAsignatura]?.expandido && (
+                                    <div className={`pl-4 ml-4 space-y-2 border-l-2 ${colores.border}`}>
+                                        {/* Bibliografía Básica */}
+                                        <div className="px-3 py-1 rounded-md cursor-pointer"
+                                            onClick={() => toggleBibliografia(seccion, null, null, nombreAsignatura, 'basica', true)}>
+                                            <div className="flex items-center justify-between">
+                                                <div className="text-xs font-semibold text-gray-500">Bibliografía Básica</div>
+                                                <svg
+                                                    className={`w-4 h-4 ${colores.bibliografia} transform transition-transform ${expanded.bibliografias[`${seccion}-${nombreAsignatura}-basica`] ? 'rotate-0' : '-rotate-90'}`}
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
+                                            {expanded.bibliografias[`${seccion}-${nombreAsignatura}-basica`] && (
+                                                <ul className="mt-1 ml-4 space-y-1">
+                                                    {datos.bibliografiaBasica.map((libro, index) => (
+                                                        <li key={`basica-${index}`} className="text-xs text-gray-600">
+                                                            <a
+                                                                href={libro.enlace}
+                                                                onClick={(e) => handleDownload(e, libro.enlace, libro.nombre)}
+                                                                className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
+                                                            >
+                                                                {libro.nombre}
+                                                            </a>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+
+                                        {/* Bibliografía Complementaria */}
+                                        <div className="px-3 py-1 rounded-md cursor-pointer"
+                                            onClick={() => toggleBibliografia(seccion, null, null, nombreAsignatura, 'complementaria', true)}>
+                                            <div className="flex items-center justify-between">
+                                                <div className="text-xs font-semibold text-gray-500">Bibliografía Complementaria</div>
+                                                <svg
+                                                    className={`w-4 h-4 ${colores.bibliografia} transform transition-transform ${expanded.bibliografias[`${seccion}-${nombreAsignatura}-complementaria`] ? 'rotate-0' : '-rotate-90'}`}
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
+                                            {expanded.bibliografias[`${seccion}-${nombreAsignatura}-complementaria`] && (
+                                                <ul className="mt-1 ml-4 space-y-1">
+                                                    {datos.bibliografiaComplementaria.map((libro, index) => (
+                                                        <li key={`complementaria-${index}`} className="text-xs text-gray-600">
+                                                            <a
+                                                                href={libro.enlace}
+                                                                onClick={(e) => handleDownload(e, libro.enlace, libro.nombre)}
+                                                                className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
+                                                            >
+                                                                {libro.nombre}
+                                                            </a>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+
+                                        {/* Clases */}
+                                        <div className="px-3 py-1 rounded-md cursor-pointer"
+                                            onClick={() => toggleClases(seccion, null, null, nombreAsignatura, true)}>
+                                            <div className="flex items-center justify-between">
+                                                <div className="text-xs font-semibold text-gray-500">Clases</div>
+                                                <svg
+                                                    className={`w-4 h-4 ${colores.clase} transform transition-transform ${expanded.clases[`${seccion}-${nombreAsignatura}-clases`] ? 'rotate-0' : '-rotate-90'}`}
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
+                                            {expanded.clases[`${seccion}-${nombreAsignatura}-clases`] && (
+                                                <ul className="mt-1 ml-4 space-y-1">
+                                                    {datos.clases.map((clase, index) => (
+                                                        <li key={`clase-${index}`} className="text-xs text-gray-600">
+                                                            <a
+                                                                href={clase.enlace}
+                                                                onClick={(e) => handleDownload(e, clase.enlace, clase.nombre)}
+                                                                className="text-blue-600 cursor-pointer hover:text-blue-800 hover:underline"
+                                                            >
+                                                                {clase.nombre}
+                                                            </a>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
-        <div className="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow-md">
+        <div id="cursos-section" className="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow-md">
             <div className="flex items-center mt-20 mb-6 text-sm text-gray-500">
-                <span>Página Principal / Cursos</span>
+                <Link to="/" className="text-blue-600 hover:underline">Página Principal</Link>
+                <span className="mx-2">/</span>
+                <span>Cursos</span>
             </div>
 
             <div className="mb-6">
                 <input
                     type="text"
-                    placeholder="Buscar cursos"
+                    placeholder="Buscar cursos o asignaturas"
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={terminoBusqueda}
+                    onChange={(e) => setTerminoBusqueda(e.target.value)}
                 />
             </div>
 
-            <div className="space-y-4">
-                {renderCarrera('contabilidad', 'Licenciatura en Contabilidad y Finanzas')}
-                {renderCarrera('culturaFisica', 'Licenciatura en Cultura Física')}
-                {renderCarrera('educacionPrimaria5', 'Licenciatura en Educación Primaria (5 años)')}
-                {renderCarrera('educacionPrimaria3', 'Licenciatura en Educación Primaria (3 años)')}
-                {renderCarrera('educacionPreescolar5', 'Licenciatura en Educación Preescolar (5 años)')}
-                {renderCarrera('educacionPreescolar3', 'Licenciatura en Educación Preescolar (3 años)')}
-                {renderCarrera('agronoma', 'Ingeniería Agrónoma')}
-                {renderCarrera('trabajoSocial', 'Licenciatura en Trabajo Social')}
-                {renderCarrera('tecnicoTrabajoSocial', 'Técnico Superior en Trabajo Social')}
-            </div>
+            {terminoBusqueda.trim() && (
+                <div className="mb-6">
+                    <h3 className="mb-3 text-lg font-semibold">
+                        Resultados de búsqueda para "{terminoBusqueda}"
+                    </h3>
+
+                    {resultadosBusqueda.length > 0 ? (
+                        <div className="space-y-4">
+                            {resultadosBusqueda.map((resultado, index) => (
+                                <div key={index} className="p-4 border border-gray-200 rounded-lg">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h4 className="font-medium">{resultado.nombreAsignatura}</h4>
+                                            <p className="text-sm text-gray-600">
+                                                {obtenerNombreSeccion(resultado.carrera)}
+                                                {resultado.tipo === 'carrera' && ` - ${resultado.año}° Año - ${resultado.periodo === 1 ? 'Primer' : 'Segundo'} período`}
+                                            </p>
+                                        </div>
+                                        <button
+                                            className="px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
+                                            onClick={() => {
+                                                setCarreraSeleccionada(resultado.carrera);
+                                                setTerminoBusqueda('');
+
+                                                if (resultado.tipo === 'carrera') {
+                                                    setExpanded(prev => ({
+                                                        ...prev,
+                                                        carreras: {
+                                                            ...prev.carreras,
+                                                            [resultado.carrera]: {
+                                                                ...prev.carreras[resultado.carrera],
+                                                                expandido: true,
+                                                                años: {
+                                                                    ...prev.carreras[resultado.carrera].años,
+                                                                    [resultado.año]: {
+                                                                        ...prev.carreras[resultado.carrera].años[resultado.año],
+                                                                        expandido: true,
+                                                                        periodos: {
+                                                                            ...prev.carreras[resultado.carrera].años[resultado.año].periodos,
+                                                                            [resultado.periodo]: {
+                                                                                ...prev.carreras[resultado.carrera].años[resultado.año].periodos[resultado.periodo],
+                                                                                expandido: true,
+                                                                                asignaturas: {
+                                                                                    ...prev.carreras[resultado.carrera].años[resultado.año].periodos[resultado.periodo].asignaturas,
+                                                                                    [resultado.nombreAsignatura]: {
+                                                                                        expandido: true
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }));
+                                                } else {
+                                                    setExpanded(prev => ({
+                                                        ...prev,
+                                                        seccionesEspeciales: {
+                                                            ...prev.seccionesEspeciales,
+                                                            [resultado.carrera]: {
+                                                                ...prev.seccionesEspeciales[resultado.carrera],
+                                                                expandido: true,
+                                                                asignaturas: {
+                                                                    ...prev.seccionesEspeciales[resultado.carrera].asignaturas,
+                                                                    [resultado.nombreAsignatura]: {
+                                                                        ...prev.seccionesEspeciales[resultado.carrera].asignaturas[resultado.nombreAsignatura],
+                                                                        expandido: true
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }));
+                                                }
+                                            }}
+                                        >
+                                            Ir a la asignatura
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500">No se encontraron asignaturas que coincidan con la búsqueda</p>
+                    )}
+                </div>
+            )}
+
+            {!terminoBusqueda.trim() && (
+                <div className="space-y-4">
+                    {/* Carreras regulares */}
+                    <h2 className="text-xl font-bold text-gray-800">Carreras Universitarias</h2>
+                    {renderCarrera('contabilidad', 'Licenciatura en Contabilidad y Finanzas')}
+                    {renderCarrera('culturaFisica', 'Licenciatura en Cultura Física')}
+                    {renderCarrera('educacionPrimaria5', 'Licenciatura en Educación Primaria (5 años)')}
+                    {renderCarrera('educacionPrimaria3', 'Licenciatura en Educación Primaria (3 años)')}
+                    {renderCarrera('educacionPreescolar5', 'Licenciatura en Educación Preescolar (5 años)')}
+                    {renderCarrera('educacionPreescolar3', 'Licenciatura en Educación Preescolar (3 años)')}
+                    {renderCarrera('agronoma', 'Ingeniería Agrónoma')}
+                    {renderCarrera('trabajoSocial', 'Licenciatura en Trabajo Social')}
+                    {renderCarrera('tecnicoTrabajoSocial', 'Técnico Superior en Trabajo Social')}
+
+                    {/* Secciones especiales */}
+                    <h2 className="pt-6 mt-6 text-xl font-bold text-gray-800 border-t border-gray-200">Otras Secciones</h2>
+                    {renderSeccionEspecial('trabajoMetodologico', 'Trabajo Metodológico')}
+                    {renderSeccionEspecial('idiomas', 'Idiomas')}
+                    {renderSeccionEspecial('eventos', 'Eventos')}
+                </div>
+            )}
 
             <div className="pt-4 mt-6 border-t border-gray-200">
                 <button
                     className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
-                    onClick={collapseAll}
+                    onClick={toggleExpandCollapseAll}
                 >
-                    Colapsar todo
+                    {todoColapsado() ? 'Desplegar todo' : 'Colapsar todo'}
                 </button>
             </div>
         </div>

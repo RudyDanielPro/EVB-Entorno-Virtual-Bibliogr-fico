@@ -1,30 +1,34 @@
+import { Link } from 'react-router-dom';
 import Contabilidad from '../assets/Contabilidad.jpg';
 import Agronomia from '../assets/Agronomia.jpg';
 import Primario from '../assets/Primario.jpg';
 import Trab_social from '../assets/Trab-Social.jpg';
-import { Link } from 'react-router-dom';
 
 export function Hero() {
   const carreras = [
     {
+      id: 'contabilidad',
       categoria: "Licenciatura",
       especialidad: "Contabilidad y Finanzas",
       imagen: Contabilidad,
       descripcion: "Formación en gestión financiera y contable."
     },
     {
+      id: 'educacionPrimaria5',
       categoria: "Licenciatura",
-      especialidad: "Maestro Primario",
+      especialidad: "Educación Primaria",
       imagen: Primario,
       descripcion: "Enfoque en educación infantil y pedagogía."
     },
     {
+      id: 'trabajoSocial',
       categoria: "Licenciatura",
       especialidad: "Trabajo Social",
       imagen: Trab_social,
       descripcion: "Promoción del bienestar social y comunitario."
     },
     {
+      id: 'agronoma',
       categoria: "Ingenieria",
       especialidad: "Agronomia",
       imagen: Agronomia,
@@ -34,21 +38,20 @@ export function Hero() {
 
   return (
     <>
-      {/* Sección de Carreras con ID para el scroll */}
       <section id="carreras-section" className="m-2">
         <div className="p-6 bg-white">
           <h1 className="mb-10 text-3xl font-bold text-center text-black">Centro Universitario Municipal Panchito Gómez Toro</h1>
         </div>
-        
+
         <div className="font-sans bg-white">
           <h1 className="mb-10 text-3xl font-bold text-center text-black">Carreras</h1>
 
           <div className="flex flex-wrap justify-center max-w-5xl gap-6 mx-auto mb-10">
             {carreras.map((carrera, index) => (
-              <div
+              <Link
+                to={`/courses?carrera=${carrera.id}`}
                 key={index}
-                className="text-center cursor-pointer group"
-                style={{ width: 'calc(25% - 20px)', minWidth: '200px' }}
+                className="text-center group block w-[calc(25%-20px)] min-w-[200px]"
               >
                 <div className="relative w-full h-40 mb-2 overflow-hidden rounded">
                   <img
@@ -62,7 +65,7 @@ export function Hero() {
                 </div>
                 <p className="text-sm">{carrera.categoria}</p>
                 <p className="text-base font-bold">{carrera.especialidad}</p>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -76,7 +79,6 @@ export function Hero() {
         </div>
       </section>
 
-      {/* Otras secciones */}
       <section className='bg-[#00135a] text-white py-12 px-6 mt-8'>
         <div className='container mx-auto'>
           <div className='grid grid-cols-1 gap-8 text-center md:grid-cols-3'>
@@ -98,41 +100,30 @@ export function Hero() {
           </div>
         </div>
       </section>
-    
+
       <section className="bg-[#00135a] text-white mt-10">
         <div className='p-6'>
           <h2 className='text-2xl font-bold text-center'>Otras categorías de apoyo al proceso de enseñanza aprendizaje</h2>
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 p-6 bg-white">
-          <div className="w-full p-4 text-black bg-gray-100 rounded-lg sm:w-[45%] lg:w-[22%]">
-            <h2 className="mb-2 text-xl font-bold">Asignaturas Optativas</h2>
-            <p className="mb-4 text-sm">Asignaturas para complementar la formación de los estudiantes.</p>
-            <Link to="/Carreras" className="text-blue-600 hover:underline">IR A →</Link>
-          </div>
 
           <div className="w-full p-4 text-black bg-gray-100 rounded-lg sm:w-[45%] lg:w-[22%]">
             <h2 className="mb-2 text-xl font-bold">Idiomas</h2>
             <p className="mb-4 text-sm">Cursos de preparación en idiomas extranjeros. Inglés según los niveles del marco común europeo.</p>
-            <Link to="/Carreras" className="text-blue-600 hover:underline">IR A →</Link>
+            <Link to="/courses" className="text-blue-600 hover:underline">IR A →</Link>
           </div>
 
           <div className="w-full p-4 text-black bg-gray-100 rounded-lg sm:w-[45%] lg:w-[22%]">
             <h2 className="mb-2 text-xl font-bold">Eventos</h2>
             <p className="mb-4 text-sm">Jornadas y eventos estudiantiles</p>
-            <Link to="/Carreras" className="text-blue-600 hover:underline">IR A →</Link>
-          </div>
-
-          <div className="w-full p-4 text-black bg-gray-100 rounded-lg sm:w-[45%] lg:w-[22%]">
-            <h2 className="mb-2 text-xl font-bold">Asignaturas Electivas</h2>
-            <p className="mb-4 text-sm">Asignaturas para el apoyo a la formación integral de los futuros profesionales.</p>
-            <Link to="/Carreras" className="text-blue-600 hover:underline">IR A →</Link>
+            <Link to="/courses" className="text-blue-600 hover:underline">IR A →</Link>
           </div>
 
           <div className="w-full p-4 text-black bg-gray-100 rounded-lg sm:w-[45%] lg:w-[22%]">
             <h2 className="mb-2 text-xl font-bold">Preparación Metodológica</h2>
             <p className="mb-4 text-sm">Preparación metodológica para profesores.</p>
-            <Link to="/Carreras" className="text-blue-600 hover:underline">IR A →</Link>
+            <Link to="/courses" className="text-blue-600 hover:underline">IR A →</Link>
           </div>
         </div>
       </section>
