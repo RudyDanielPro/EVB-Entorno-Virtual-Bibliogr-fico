@@ -1982,7 +1982,7 @@ export function Cursos() {
                     className="text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
                     onClick={toggleExpandCollapseAll}
                 >
-                    {todoColapsado() ? 'Desplegar todo' : 'Colapsar todo'}
+                    {todoColapsado() ? 'Expandir todo' : 'Colapsar todo'}
                 </button>
             </div>
         </div>
