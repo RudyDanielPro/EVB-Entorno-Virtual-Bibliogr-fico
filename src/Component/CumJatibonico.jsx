@@ -58,7 +58,7 @@ export function CUMJatibonico() {
                     ))}
                 </ul>
                 <p className="mt-4 italic text-gray-600">
-                    Modalidades: Presencial, Semipresencial y a Distancia.
+                    Modalidad: Presencial
                 </p>
             </section>
 
