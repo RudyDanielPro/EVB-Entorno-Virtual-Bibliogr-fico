@@ -1348,6 +1348,249 @@ export function Cursos() {
                                 enlace: "https://drive.google.com/uc?export=download&id=1XBocdz5_eiOyApEnNqGhoa5ApLsAl2_z"
                             }
                         ]
+                    },
+                    "Introducción al Trabajo Social": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            {
+                                nombre: "De la reconceptualización al método",
+                                enlace: "https://drive.google.com/uc?export=download&id=18d8bK50T23ybU377udzR1Jha0v94mGcU"
+                            },
+                            {
+                                nombre: "DE TRABAJO SOCIAL Y CIENCIAS SOCIALES",
+                                enlace: "https://drive.google.com/uc?export=download&id=1qgyxowunX4lF2TKW-uJEOEAHpQZ7MDML"
+                            },
+                            {
+                                nombre: "Definicion.Regional.del.Trabajo.Social.",
+                                enlace: "https://drive.google.com/uc?export=download&id=1LwMGLOG2Ah2XOJmf3AUkUQZTco8ClrW9"
+                            },
+                            {
+                                nombre: "El contexto del proceso de profesionalización",
+                                enlace: "https://drive.google.com/uc?export=download&id=1NtI7jLLUPw4qlmjYl8bHkCbQIYmNVwp6"
+                            },
+                            {
+                                nombre: "EL PROFESIONAL DEL TRABAJO SOCIAL EN CUBA.",
+                                enlace: "https://drive.google.com/uc?export=download&id=1qfAGs0_OLbBl8UbVAP49v1ehH6njeODZ"
+                            },
+                            {
+                                nombre: "enfoques-teorias-y-perspectivas-del-trabajo-social-y-sus-programas-academicos",
+                                enlace: "https://drive.google.com/uc?export=download&id=1g9JiS3qSPGZ0McQWPy-jMw3I_p82e1Pl"
+                            },
+                            {
+                                nombre: "Historia del Trabajo Social Latinoamericano",
+                                enlace: "https://drive.google.com/uc?export=download&id=1zb0tuqBaUY7i0YDE3kBVyN7thHolMUgX"
+                            },
+                            {
+                                nombre: "Historia del Trabajo Social",
+                                enlace: "https://drive.google.com/uc?export=download&id=122Qpc5-ARTHQDL-hl1kinGqTHS9I0G4R"
+                            },
+                            {
+                                nombre: "Introduccion al trabajo social",
+                                enlace: "https://drive.google.com/uc?export=download&id=1T2031xOZcd9BwBijpKJwCLHEiOaJJte7"
+                            },
+                            {
+                                nombre: "Origenes del Trabajo Social",
+                                enlace: "https://drive.google.com/uc?export=download&id=1RIie-jBBkP9RvaP5n_lTx-xfDpZCOTWN"
+                            },
+                            {
+                                nombre: "Reconceptualización del Trabajo Social",
+                                enlace: "https://drive.google.com/uc?export=download&id=1diav0FQ3HbQnLdCFd0TOUmLWZOSe9B-L"
+                            },
+                            {
+                                nombre: "Vinculo del TS con otras ciencias sociales",
+                                enlace: "https://drive.google.com/uc?export=download&id=17n81loFH3-kp_pz0xHBDotE1MpQeF3T8"
+                            },
+                        ],
+                        bibliografiaComplementaria: [
+                            {
+                                nombre: "El trabajo social en Europa",
+                                enlace: "https://drive.google.com/uc?export=download&id=1dI8PIdG3D7eWlnjy57VxB7BloREyZKTS"
+                            },
+                            {
+                                nombre: "EL TRABAJO SOCIAL. SUS ORÍGENES",
+                                enlace: "https://drive.google.com/uc?export=download&id=1TlBnbxpdA4fsqc_WbC0lfptA4_2oPy7M"
+                            },
+                            {
+                                nombre: "Introducción al trabajo Social",
+                                enlace: "https://drive.google.com/uc?export=download&id=1YknJVVEp7b4ywQZTmJP1-PtOe70CnXYh"
+                            },
+                            {
+                                nombre: "origen de TS en Cuba",
+                                enlace: "https://drive.google.com/uc?export=download&id=16suCoKND9KqQJ4xsS2Y83w8WuGJcHwLM"
+                            },
+                            {
+                                nombre: "Origen TS en EEUU",
+                                enlace: "https://drive.google.com/uc?export=download&id=1qWeS7YBcmsa_vaGuPDBwDdWf1xR4e2Ie"
+                            },
+                            {
+                                nombre: "Relaciones Sociales Desiguales",
+                                enlace: "https://drive.google.com/uc?export=download&id=1hz5ImVI71_wPWSbKr0-OiTkBH2xFLmSU"
+                            },
+                            {
+                                nombre: "trabajo social en EEUU",
+                                enlace: "https://drive.google.com/uc?export=download&id=1mJ3OQVzJrByiZaKe5qt6SLwvUST6_yvC"
+                            }
+                        ],
+                        clases: [
+                            {
+                                nombre: "Clase 1",
+                                enlace: "https://drive.google.com/uc?export=download&id=1T1Y1dZOf5xfDw8k_wdTleIn6EPOXvvw4"
+                            },
+                            {
+                                nombre: "Clase 2",
+                                enlace: "https://drive.google.com/uc?export=download&id=1hriHB4I-XZgmOZgW8x8T-lidLSUlS5XX"
+                            },
+                            {
+                                nombre: "Clase 3",
+                                enlace: "https://drive.google.com/uc?export=download&id=1gdAzkBjVZivYz-2zmTy2Kgud-bossox3"
+                            },
+                            {
+                                nombre: "Clase 4",
+                                enlace: "https://drive.google.com/uc?export=download&id=1oo-CEvU3mDLUict_R8yhwZz9q4rluDOk"
+                            },
+                            {
+                                nombre: "Clase 5",
+                                enlace: "https://drive.google.com/uc?export=download&id=1A2Hr8kQzmVUz814nghASEpUEmQoeBJ_e"
+                            },
+                            {
+                                nombre: "Clase 6",
+                                enlace: "https://drive.google.com/uc?export=download&id=1lUq7yb34P_ssSJmrc3uuZs6NneY8RdTc"
+                            },
+                            {
+                                nombre: "Clase 7",
+                                enlace: "https://drive.google.com/uc?export=download&id=1LAhDDP6JUFVcB3Nvlf7vwBff_z8T-T2P"
+                            },
+                            {
+                                nombre: "Clase 8",
+                                enlace: "https://drive.google.com/uc?export=download&id=1oapJ4csH3arV16VWlvs0E06Pu5kqocHt"
+                            },
+                            {
+                                nombre: "Evaluación de asignatura Int al TS",
+                                enlace: "https://drive.google.com/uc?export=download&id=195aj5gdaVWmcBmNMbZCAv-s_VVks8rCS"
+                            }
+                        ]
+                    },
+                    "Redacción y Estilo": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            {
+                                nombre: "manual completo 2 ed",
+                                enlace: "https://drive.google.com/uc?export=download&id=1xSjI7TeafTBvtF01kvVgcjHGbHUMJGpO"
+                            },                            
+                            {
+                                nombre: "Guía-de-redacción-y-estilo",
+                                enlace: "https://drive.google.com/uc?export=download&id=18457ClQCWQdaojv0Xgdk3v9L5Gn_-Anh"
+                            }
+                        ],
+                        bibliografiaComplementaria: [
+                            {
+                                nombre: "GUIA_PARA_PRESENTAR_TRABAJOS_DE_INVESTIG",
+                                enlace: "https://drive.google.com/uc?export=download&id=1CRtwTmYQ3mXrAQBRqFwnr_pkaNS0Tlvk"
+                            },
+                            {
+                                nombre: "Guía-de-redacción-y-estilo-vF_-web-1-1",
+                                enlace: "https://drive.google.com/uc?export=download&id=1UwuqsktSXXfKgnP1nlraCdB9MFpY-7BA"
+                            },
+                            {
+                                nombre: "manual-estilo-publicaciones",
+                                enlace: "https://drive.google.com/uc?export=download&id=1RMi92lEiWSZ8aBdfiAabKzENSFuwbTyD"
+                            }
+                        ],
+                        clases: [
+                            {
+                                nombre: "Clase 1 y 2",
+                                enlace: "https://drive.google.com/uc?export=download&id=1PB0NjRt9e0wA-H6KeP5Up72qgbvM0PGL"
+                            },
+                            {
+                                nombre: "Clase 3 y 4 ",
+                                enlace: "https://drive.google.com/uc?export=download&id=1RLYPept_gIJNVDTH1R8bFZyBwI28tY7J"
+                            },
+                            {
+                                nombre: "Clase 5 y 6",
+                                enlace: "https://drive.google.com/uc?export=download&id=1nvKrMLjdDV7eQnCJ69fU_42d6slm7VrM"
+                            },
+                            {
+                                nombre: "Clase 7 y 8",
+                                enlace: "https://drive.google.com/uc?export=download&id=1hIcv4Bi3Zc9PBxprowu3g9jpZdKLB8fP"
+                            },
+                            {
+                                nombre: "Clase 9 y 10",
+                                enlace: "https://drive.google.com/uc?export=download&id=1GRX7maqrWWDRpHi-lZwcFWS_YGGuN3ac"
+                            },
+                            {
+                                nombre: "Clase 11 y 12",
+                                enlace: "https://drive.google.com/uc?export=download&id=1-pDcFWgeedJZ5m0mwglfhGD_j5vBQgW5"
+                            },
+                            {
+                                nombre: "Clase 13 y 14",
+                                enlace: "https://drive.google.com/uc?export=download&id=1JLYNDZNBa9PbJN0yuUYPPqCLbosUq4kQ"
+                            },
+                            {
+                                nombre: "Clase 15 y 16",
+                                enlace: "https://drive.google.com/uc?export=download&id=1uh_5KsW0yJwfOLnJqHu6-og4LuBE5nXo"
+                            }
+                        ]
+                    },
+                    "Taller de Intervencion Social l": {
+                        expandido: false,
+                        bibliografiaBasica: [
+                            {
+                                nombre: "Canales_Ceron_Manuel_-_Metodologias_de_l",
+                                enlace: "https://drive.google.com/uc?export=download&id=1ahKR8mHPidXxAI-OjT1rtqv3y5wVudGE"
+                            },
+                            {
+                                nombre: "Guia-didactica-metodologia-de-la-investigacion",
+                                enlace: "https://drive.google.com/uc?export=download&id=1q7vLbGxbGeLuww7d-HhLorLXjWJQTCfc"
+                            },
+                            {
+                                nombre: "libro de taylor y Bogdan",
+                                enlace: "https://drive.google.com/uc?export=download&id=1FCU6z1DiRyxoxDhf3GnqY4fzL2-gNyN3"
+                            },
+                            {
+                                nombre: "met_inv_cual(Rodríguez y Gil)",
+                                enlace: "https://drive.google.com/uc?export=download&id=1ZImgjfeOacZmik74M-HFsENJKK-rVGGo"
+                            }
+                        ],
+                        bibliografiaComplementaria: [
+                            {
+                                nombre: "endnoteweb",
+                                enlace: "https://drive.google.com/uc?export=download&id=1rjqAHmB3hNqLz_FbNrXC7lIrLezK2fdy"
+                            },
+                            {
+                                nombre: "EndNoteX9_dic_18",
+                                enlace: "https://drive.google.com/uc?export=download&id=1e6E58AzQOsFsjtCeKy8g2e5-v6YM1nYT"
+                            },
+                            {
+                                nombre: "Guia_EndNote_Basic_completa_BUCLM_2018",
+                                enlace: "https://drive.google.com/uc?export=download&id=1bsfnPRu0lkXn8j-ySPyYe_y1o6Rkb9dJ"
+                            },
+                            {
+                                nombre: "manual basico de end note",
+                                enlace: "https://drive.google.com/uc?export=download&id=1DRMJKZ8ChY9iQWoO3s7cvkXORrxRxgL9"
+                            }
+                        ],
+                        clases: [
+                            {
+                                nombre: "Guía para evaluación final Talleres de Intervención Social I",
+                                enlace: "https://drive.google.com/uc?export=download&id=1DcADUTZzjlj5Gbcsxiqhj3RYpwXtA-ur"
+                            },
+                            {
+                                nombre: "Guía para evaluación final",
+                                enlace: "https://drive.google.com/uc?export=download&id=1ELkBTX0PJKYDmxXSN9fJ5Cu1nbg0BnVS"
+                            },
+                            {
+                                nombre: "taller 1",
+                                enlace: "https://drive.google.com/uc?export=download&id=1pwPgrgANb9RsDVRr_uQ3bPsuuw8DgTsv"
+                            },
+                            {
+                                nombre: "taller 2",
+                                enlace: "https://drive.google.com/uc?export=download&id=12ZdNGB2w77iTUvigJze6pgT9vVrxMPgC"
+                            },
+                            {
+                                nombre: "TALLER DE INTERVENCIÓN SOCIAL I",
+                                enlace: "https://drive.google.com/uc?export=download&id=1HK5DoE1AxgQ_Hy15Lc4atxi8FDIx-FbO"
+                            }
+                        ]
                     }
                 }
             }
