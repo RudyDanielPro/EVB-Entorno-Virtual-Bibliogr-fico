@@ -229,13 +229,22 @@ export function Cursos() {
     }, [terminoBusqueda]);
 
     const handleDownload = (e, enlace, nombreArchivo = 'documento') => {
-        e.preventDefault();
-        // Simulación de descarga
-        console.log(`Descargando ${nombreArchivo} desde ${enlace}`);
-        // En una implementación real, aquí iría la lógica para descargar el archivo
-    };
+    e.preventDefault();
+    e.stopPropagation(); 
+    
+    
+    const link = document.createElement('a');
+    link.href = enlace;
+    link.download = nombreArchivo.replace(/[^a-z0-9]/gi, '_') + '.pdf'; 
+    link.style.display = 'none';
+    
+   
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
 
-    // Funciones para manejar la expansión
+    
     const toggleCarrera = (carrera) => {
         setExpanded(prev => ({
             ...prev,

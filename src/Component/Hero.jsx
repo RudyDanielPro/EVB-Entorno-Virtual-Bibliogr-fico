@@ -1,10 +1,26 @@
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import Contabilidad from '../assets/Contabilidad.jpg';
 import Agronomia from '../assets/Agronomia.jpg';
 import Primario from '../assets/Primario.jpg';
 import Trab_social from '../assets/Trab-Social.jpg';
 
 export function Hero() {
+  // Precarga las imágenes al montar el componente
+  useEffect(() => {
+    const imagesToPreload = [
+      Contabilidad,
+      Agronomia,
+      Primario,
+      Trab_social
+    ];
+
+    imagesToPreload.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   const carreras = [
     {
       id: 'contabilidad',
@@ -57,6 +73,7 @@ export function Hero() {
                   <img
                     src={carrera.imagen}
                     alt={carrera.especialidad}
+                    loading="lazy"  // Carga perezosa
                     className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 flex items-center justify-center p-4 transition-opacity duration-300 bg-black opacity-0 bg-opacity-70 group-hover:opacity-100">
@@ -107,7 +124,6 @@ export function Hero() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 p-6 bg-white">
-
           <div className="w-full p-4 text-black bg-gray-100 rounded-lg sm:w-[45%] lg:w-[22%]">
             <h2 className="mb-2 text-xl font-bold">Idiomas</h2>
             <p className="mb-4 text-sm">Cursos de preparación en idiomas extranjeros. Inglés según los niveles del marco común europeo.</p>
